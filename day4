@@ -19,7 +19,7 @@ cat gatk_exome.vcf |bio-vcf -v --template rdf> yan.rdf
 
 #Upload the rdf file to the 4store server (http://guix.genenetwork.org)
 #rdf=yan.rdf
-#uri=http://guix.genenetwork.org/data/http://wuxiaoyan.org/data/$rdf
+#uri=http://guix.genenetwork.org/data/http://biobeat.org/data/$rdf
 #curl -X DELETE $uri
 #curl -T $rdf -H 'Content-Type: application/x-turtle' $uri
 
@@ -33,3 +33,19 @@ WHERE
 ## create a file named sparql1.rq
 ## what will be the ids
 cat sparql1.rq |sparql-query "http://guix.genenetwork.org/sparql/" -p
+
+## generate the query in Python
+import requests
+import subprocess
+
+host = "http://guix.genenetwork.org/sparql/"
+query = """
+PREFIX : <http://biobeat.org/rdf/ns#>
+SELECT ?id 
+WHERE
+{
+  ?id   :chr      "19" .  
+}
+"""
+r = requests.post(host, data={ "query": query, "output": "text" })
+print r.text
